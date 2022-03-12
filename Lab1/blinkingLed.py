@@ -1,42 +1,21 @@
-from goto import *
+import RPi.GPIO as GPIO
 import time
-import var
-import pio
-import resource
-import Ports
-
-
-def peripheral_setup():
-    pio.terminal = Ports.SerialTerminal(9600)
-
-
-def variable_setup():
-    var.Name = ''
-    var.Age = ''
-    var.School = ''
-
-
-def peripheral_loop():
-    pass
-
-# main function
+import os
 
 
 def main():
-    peripheral_setup()
-    pio.terminal.print('What is your name?')
-    var.Name = pio.terminal.input(True)
-    pio.terminal.print('How old are you?')
-    var.Age = pio.terminal.input(True)
-    pio.terminal.print('Where do you study?')
-    var.School = pio.terminal.input(True)
-    pio.terminal.print('Hello ' + var.Name +
-                       ', you are ' + var.Age + ' years old and study at ' + var.School)
+    LED = 4
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(LED, GPIO.OUT)
     while True:
-        peripheral_loop()
-        time.sleep(0.1)
-        pass
+        if GPIO.input(LED) == GPIO.LOW:
+            GPIO.output(LED, GPIO.HIGH)
+            time.sleep(0.5)
+        if GPIO.input(LED) == GPIO.HIGH:
+            GPIO.output(LED, GPIO.LOW)
+            time.sleep(0.5)
 
 
-if __name__ == '__main__':
+while 1:
     main()
+    pass
