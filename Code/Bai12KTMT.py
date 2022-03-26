@@ -27,4 +27,25 @@ def main():
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(Config.BT1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             while True:
-                pass
+                _, src = cap.read()
+                ilowH = cv2.getTrackbarPos('lowH', 'image')
+                ihighH = cv2.getTrackbarPos('highH', 'image')
+                ilowS = cv2.getTrackbarPos('lowS', 'image')
+                ihighS = cv2.getTrackbarPos('highS', 'image')
+                ilowV = cv2.getTrackbarPos('lowV', 'image')
+                ihighV = cv2.getTrackbarPos('highV', 'image')
+                hsv = cv2.cvtColor(src, cv2.COLOR_BGR2HSV)
+                mask = cv2.inRange(hsv, (ilowH, ilowS, ilowV),
+                                   (ihighH, ihighS, ihighV))
+                result = cv2.bitwise_or(src, src, mask=mask)
+                cv2.imshow('image', result)
+                if cv2.waitkey(1) & 0xFF == ord('q'):
+                    GPIO.cleanup()
+                    break
+
+
+try:
+    main()
+except KeyboardInterrupt:
+    GPIO.cleanup()
+    cv2.destroyAllWindows()
