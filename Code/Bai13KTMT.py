@@ -30,7 +30,7 @@ def main():
                     draw(contours, result)
                     cv2.imshow('Camera', src)
                     cv2.imshow('Threshold', result)
-                    if cv2.waitkey(1) & 0xFF == ord('q'):
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
                         GPIO.cleanup()
                         cv2.destroyAllWindow()
                         break
