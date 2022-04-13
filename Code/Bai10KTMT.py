@@ -1,3 +1,5 @@
+# camera_bai10
+
 import cv2
 import RPi.GPIO as GPIO
 import time
@@ -10,31 +12,33 @@ def main():
     GPIO.setup(BT2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(BT3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     global namewindow
-    namewindow = "Camera User"
+    namewindow = 'Camera'
     capture = cv2.VideoCapture(0)
-    print("Capture OK")
-    fourcc = cv2.VideoWriter__fourcc(*'DIVX')
+    print('Capture oke!')
+    fourcc = cv2.VideoWriter_fourcc(*'DIVX')
     out = cv2.VideoWriter(
-        'output.avi', cv2.VideoWriter__fourcc(*'MJPG'), 20.0, (640, 480))
+        'output.avi', cv2.VideoWriter_fourcc(*'MJPG'), 20.0, (640, 480))
+
     cap_video = False
     while True:
         ret, frame = capture.read()
         if GPIO.input(BT2) == GPIO.LOW:
-            print("Press BT2")
+            print('BT2 is pressed!')
             cv2.imshow(namewindow, frame)
             out.write(frame)
-            print("Video lưu")
-            if cv2.waitkey(1) & 0xFF == ord('q'):
+            print('Video is saved!')
+            if cv2.waitKey(1) & 0xFF == ord('q'):
                 GPIO.cleanup()
-                cv2.destroyWindow(namewindow)
+                cv2.destroyAllWindows(namewindow)
                 break
             continue
         if GPIO.input(BT3) == GPIO.LOW:
-            print("Press BT3")
+            print('BT3 is pressed!')
             if cap_video:
                 cap_video = False
                 cv2.destroyWindow(namewindow)
                 continue
+            time.sleep(0.5)
             if not cap_video:
                 cap_video = True
                 continue
@@ -42,9 +46,9 @@ def main():
         if cap_video:
             cv2.imshow(namewindow, frame)
             out.write(frame)
-        if cv2.waitkey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             GPIO.cleanup()
-            cv2.destroyWindow(namewindow)
+            cv2.destroyAllWindows(namewindow)
             break
 
 
@@ -52,4 +56,4 @@ try:
     main()
 except KeyboardInterrupt:
     GPIO.cleanup()
-    cv2.destroyWindow(namewindow)
+    cv2.destroyAllWindows(namewindow)
