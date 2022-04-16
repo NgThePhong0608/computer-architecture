@@ -6,30 +6,31 @@ import time
 def main():
     BT4 = 2
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(BT4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(BT4, GPIO.IN,  pull_up_down=GPIO.PUD_UP)
     global namewindow
     namewindow = "Camera User"
-    capture = cv2.VideoCapture(0)
-    print("Capture OK")
+    capture = cv2.VideoCapture(-1)
+    print("Capture đã ok")
     cap_stream = False
     while capture.isOpened():
         ret, frame = capture.read()
         if GPIO.input(BT4) == GPIO.LOW:
-            print("Press BT4")
+            print("press BT4")
             if not cap_stream:
                 cap_stream = True
                 time.sleep(0.5)
                 continue
             if cap_stream:
                 cap_stream = False
-                cv2.destroyWindow(namewindow)
+                cv2.destroyWindow(nameWindow)
                 time.sleep(0.5)
                 continue
         if cap_stream:
             cv2.imshow(namewindow, frame)
-        if cv2.waitkey(1) & 0xFF == ord('q'):
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             GPIO.cleanup()
-            cv2.destroyWindow(namewindow)
+            cv2.destroyWindow()
             break
 
 
@@ -37,4 +38,4 @@ try:
     main()
 except KeyboardInterrupt:
     GPIO.cleanup()
-    cv2.destroyWindow(namewindow)
+    cv2.destroyWindow(nameWindow)
